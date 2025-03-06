@@ -1,55 +1,85 @@
 "use client";
 
-import { useState } from "react";
-import HamburgerMenu from "./hamburger";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation"; 
+import Link from "next/link";
+import { Home, User, Mail, ListChecks, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname(); 
 
-  return ( 
-    <nav className="bg-white dark:bg-gray-900/95 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-800">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="/logo.png" className="h-8" alt="logo" />
-          <span className="self-center text-2xl font-semibold">Carlito O. Tingson Jr</span>
-        </a>
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-        {/* Mobile Menu Toggle */}
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)}>
-            <HamburgerMenu />
-          </button>
-        </div>
+  const links = [
+    { name: "Home", href: "/", icon: <Home size={15} /> },
+    { name: "About", href: "/about", icon: <User size={15} /> },
+    { name: "Projects", href: "/projects", icon: <ListChecks size={15} /> },
+    { name: "Contact", href: "/contact", icon: <Mail size={15} /> },
+  ];
 
-        {/* Navigation Links */}
-        <div
-          className={`w-full md:flex md:w-auto font-custom ${isOpen ? "block" : "hidden"}`}
-          id="navbar-sticky"
-        >
-          <ul className="flex flex-col md:flex-row md:space-x-4">
-            <li>
-              <a href="/" className="block px-4 py-2 text-gray-700 dark:text-gray-300">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="/about" className="block px-4 py-2 text-gray-700 dark:text-gray-300">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="/projects" className="block px-4 py-2 text-gray-700 dark:text-gray-300">
-                Projects
-              </a>
-            </li>
-            <li>
-              <a href="/contact" className="block px-4 py-2 text-gray-700 dark:text-gray-300">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </div>
+  return (
+    <>
+      {/* Mobile Menu Button */}
+      <div
+        className={`fixed top-0 left-0 w-full bg-[#1E2761]/30 backdrop-blur-md p-4 flex items-center justify-between z-50 md:hidden transition-all ${
+          isScrolled ? "shadow-lg border-b border-[#64FFDA]/40" : ""
+        }`}
+      >
+        <button onClick={() => setIsOpen(!isOpen)} className="text-white ml-4">
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
-    </nav>
+
+      {/* Desktop Navigation */}
+      <nav
+        className={`fixed text-[1rem] top-4 left-1/2 transform -translate-x-1/2 z-50 bg-[#1E2761]/70 border border-[#64FFDA]/40 rounded-full backdrop-blur-md px-1 py-1 shadow-lg hidden md:flex ${
+          isScrolled ? "top-2 shadow-xl" : "top-6"
+        }`}
+      >
+        {links.map((link) => (
+          <Link
+            key={link.name}
+            href={link.href}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
+              pathname === link.href
+                ? "bg-[#64FFDA]/20 text-white shadow-[0_0_12px_#64FFDA]"
+                : "text-gray-300 hover:text-white hover:bg-[#64FFDA]/10"
+            }`}
+          >
+            {link.icon}
+            <span>{link.name}</span>
+          </Link>
+        ))}
+      </nav>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="fixed top-[4rem] left-4 right-4 w-[90%] bg-[#0A192F]/90 border border-[#64FFDA]/40 rounded-xl shadow-xl p-4 flex flex-col space-y-4 md:hidden">
+          {links.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              onClick={() => setIsOpen(false)}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+                pathname === link.href
+                  ? "bg-[#64FFDA]/20 text-white shadow-[0_0_12px_#64FFDA]"
+                  : "text-gray-300 hover:text-white hover:bg-[#64FFDA]/10"
+              }`}
+            >
+              {link.icon}
+              <span>{link.name}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
   );
 }

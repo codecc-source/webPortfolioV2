@@ -3,7 +3,7 @@ import Navbar from "./components/navBar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-gradient-to-r from-slate-900 to-indigo-900">
+    <div className="min-h-screen bg-cover flex flex-col items-center justify-center px-6 bg-[url('/Sprinkle.svg')]">
       <Navbar/>
        <h1 className="text-5xl font-custom font-bold mb-4 text-center pt-20">
         Portfolio V2
@@ -18,3 +18,6 @@ export default function Home() {
     </div>
   );
 }
+
+
+//add some sort of dots/texture type to background?
