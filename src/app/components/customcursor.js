@@ -28,7 +28,7 @@ export default function GlowingCursor() {
 
   return (
     <div
-      className="fixed w-100 h-100 bg-[#00ffea]/70 rounded-full blur-[50px] pointer-events-none transition-transform duration-200 ease-out mix-blend-soft-light"
+      className="fixed w-100 h-100 bg-[#00ffea] rounded-full blur-[180px] pointer-events-none transition-transform duration-200 ease-out mix-blend-soft-light"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,

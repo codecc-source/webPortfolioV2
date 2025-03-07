@@ -25,5 +25,6 @@ body {
   font-family: "Barlow Condensed", sans-serif;
 }
 
-
-/*fix custom fonts */
+* {
+  cursor: url("/cursor.svg") 16 16, auto;
+}
